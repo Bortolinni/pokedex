@@ -3,7 +3,7 @@ name: Aviso de PRD no Discord
 on:
   push:
     branches:
-      - prd
+      - main
 
 jobs:
   notify:
