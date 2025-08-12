@@ -1,4 +1,4 @@
-name: Deploy para PRD e Aviso no Discord
+name: Aviso de PRD no Discord
 
 on:
   push:
@@ -6,42 +6,26 @@ on:
       - main
 
 jobs:
-  deploy:
+  notify:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checar código
-        uses: actions/checkout@v3
-
-      - name: Instalar dependências
-        run: npm install
-
-      - name: Rodar testes
-        run: npm test
-
-      - name: Deploy para PRD
-        run: |
-          echo "Rodando deploy..."
-          # Coloque aqui seu script real de deploy
-          sleep 5
-          echo "Deploy concluído!"
+        uses: actions/checkout@v4
 
       - name: Avisar no Discord
-        if: success()
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
+          COMMIT_MSG=$(git log -1 --pretty=%B | tr -d '\r')
           COMMIT_URL="https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
           AUTHOR_URL="https://github.com/${GITHUB_ACTOR}"
 
-          curl -H "Content-Type: application/json" \
-               -X POST \
+          curl -H "Content-Type: application/json" -X POST \
                -d "{
                     \"embeds\": [{
-                      \"title\": \"🚀 Deploy para PRD concluído com sucesso!\",
+                      \"title\": \"🚀 Push em PRD\",
+                      \"description\": \"Código atualizado no branch **prd**.\",
                       \"color\": 3066993,
                       \"fields\": [
                         {\"name\": \"Repositório\", \"value\": \"${GITHUB_REPOSITORY}\", \"inline\": true},
-                        {\"name\": \"Branch\", \"value\": \"prd\", \"inline\": true},
                         {\"name\": \"Autor\", \"value\": \"[${GITHUB_ACTOR}](${AUTHOR_URL})\", \"inline\": true},
                         {\"name\": \"Commit\", \"value\": \"[${COMMIT_MSG}](${COMMIT_URL})\"}
                       ],
