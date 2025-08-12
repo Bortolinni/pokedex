@@ -3,7 +3,7 @@ name: Aviso de PRD no Discord
 on:
   push:
     branches:
-      - main
+      - prd
 
 jobs:
   notify:
@@ -17,6 +17,11 @@ jobs:
           COMMIT_MSG=$(git log -1 --pretty=%B | tr -d '\r')
           COMMIT_URL="https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
           AUTHOR_URL="https://github.com/${GITHUB_ACTOR}"
+          ZIP_BRANCH_URL="https://github.com/${GITHUB_REPOSITORY}/archive/refs/heads/prd.zip"
+          ZIP_COMMIT_URL="https://github.com/${GITHUB_REPOSITORY}/archive/${GITHUB_SHA}.zip"
+
+          # Escapar aspas no commit message para JSON
+          SAFE_COMMIT_MSG=$(printf '%s' "$COMMIT_MSG" | python3 -c 'import json,sys; print(json.dumps(sys.stdin.read())[1:-1])')
 
           curl -H "Content-Type: application/json" -X POST \
                -d "{
@@ -27,7 +32,9 @@ jobs:
                       \"fields\": [
                         {\"name\": \"Repositório\", \"value\": \"${GITHUB_REPOSITORY}\", \"inline\": true},
                         {\"name\": \"Autor\", \"value\": \"[${GITHUB_ACTOR}](${AUTHOR_URL})\", \"inline\": true},
-                        {\"name\": \"Commit\", \"value\": \"[${COMMIT_MSG}](${COMMIT_URL})\"}
+                        {\"name\": \"Commit\", \"value\": \"[${SAFE_COMMIT_MSG}](${COMMIT_URL})\"},
+                        {\"name\": \"Baixar ZIP (branch PRD)\", \"value\": \"[Download](${ZIP_BRANCH_URL})\", \"inline\": true},
+                        {\"name\": \"Baixar ZIP (este commit)\", \"value\": \"[Download](${ZIP_COMMIT_URL})\", \"inline\": true}
                       ],
                       \"timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"
                     }]
