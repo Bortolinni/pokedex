@@ -26,15 +26,13 @@ jobs:
           curl -H "Content-Type: application/json" -X POST \
                -d "{
                     \"embeds\": [{
-                      \"title\": \"🚀 Push em PRD\",
-                      \"description\": \"Código atualizado no branch **prd**.\",
+                      \"title\": \"🚀 Tema Atualizado\",
+                      \"description\": \"Novo tema em adicionado em PRD.\",
                       \"color\": 3066993,
                       \"fields\": [
-                        {\"name\": \"Repositório\", \"value\": \"${GITHUB_REPOSITORY}\", \"inline\": true},
                         {\"name\": \"Autor\", \"value\": \"[${GITHUB_ACTOR}](${AUTHOR_URL})\", \"inline\": true},
                         {\"name\": \"Commit\", \"value\": \"[${SAFE_COMMIT_MSG}](${COMMIT_URL})\"},
-                        {\"name\": \"Baixar ZIP (branch PRD)\", \"value\": \"[Download](${ZIP_BRANCH_URL})\", \"inline\": true},
-                        {\"name\": \"Baixar ZIP (este commit)\", \"value\": \"[Download](${ZIP_COMMIT_URL})\", \"inline\": true}
+                        {\"name\": \"Baixar Tema\", \"value\": \"[Download](${ZIP_COMMIT_URL})\", \"inline\": true}
                       ],
                       \"timestamp\": \"$(date -u +"%Y-%m-%dT%H:%M:%SZ")\"
                     }]
